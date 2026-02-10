@@ -8,6 +8,8 @@ Edit은 AI 기반 맞춤형 컨설팅과 글로벌 아티스트 네트워크를 
 
 🌐 **Live Demo**: https://hannah-edit.github.io/edit-ver1/
 
+[![GitHub Pages](https://img.shields.io/badge/demo-live-success)](https://hannah-edit.github.io/edit-ver1/)
+
 ### 주요 기능
 
 #### 메인 랜딩페이지
