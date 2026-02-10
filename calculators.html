@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유학 비용 계산기 - Edit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .calculator-card {
+            transition: all 0.3s ease;
+        }
+        
+        .calculator-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 네비게이션 -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-3xl font-bold gradient-text">Edit</a>
+                    <span class="ml-3 text-gray-600 text-sm">미술 유학의 새로운 시작</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="index.html" class="text-gray-700 hover:text-purple-600 transition">홈으로</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 헤더 -->
+    <section class="pt-24 pb-12 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-5xl font-bold mb-4">유학 비용 계산기</h1>
+            <p class="text-xl text-purple-100">학비, 생활비, 장학금을 정확하게 계산해보세요</p>
+        </div>
+    </section>
+
+    <!-- 계산기 탭 -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 탭 메뉴 -->
+            <div class="bg-white rounded-2xl p-2 shadow-sm mb-8 flex flex-wrap gap-2">
+                <button onclick="showCalculator('tuition')" class="calculator-tab flex-1 px-6 py-3 rounded-xl font-semibold bg-purple-600 text-white transition">
+                    <i class="fas fa-graduation-cap mr-2"></i>학비 계산기
+                </button>
+                <button onclick="showCalculator('living')" class="calculator-tab flex-1 px-6 py-3 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition">
+                    <i class="fas fa-home mr-2"></i>생활비 계산기
+                </button>
+                <button onclick="showCalculator('scholarship')" class="calculator-tab flex-1 px-6 py-3 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition">
+                    <i class="fas fa-award mr-2"></i>장학금 예측기
+                </button>
+                <button onclick="showCalculator('loan')" class="calculator-tab flex-1 px-6 py-3 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition">
+                    <i class="fas fa-piggy-bank mr-2"></i>대출 계산기
+                </button>
+            </div>
+
+            <!-- 학비 계산기 -->
+            <div id="calc-tuition" class="calculator-content">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold mb-6">학비 정보 입력</h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">국가 선택</label>
+                                <select id="tuition-country" onchange="calculateTuition()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="USA">미국 (USA)</option>
+                                    <option value="UK">영국 (UK)</option>
+                                    <option value="France">프랑스 (France)</option>
+                                    <option value="Germany">독일 (Germany)</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">학위 과정</label>
+                                <select id="tuition-degree" onchange="calculateTuition()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="undergraduate">학사 (4년)</option>
+                                    <option value="graduate">석사 (2년)</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">학교 유형</label>
+                                <select id="tuition-type" onchange="calculateTuition()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="avg">평균</option>
+                                    <option value="min">저렴한 학교</option>
+                                    <option value="max">명문 사립</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">환율 (1 USD = KRW)</label>
+                                <input type="number" id="exchange-rate" value="1330" onchange="calculateTuition()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl p-8 text-white shadow-lg">
+                            <h3 class="text-lg mb-2 text-purple-100">연간 예상 학비</h3>
+                            <div class="text-5xl font-bold mb-4" id="tuition-result-krw">₩59,850,000</div>
+                            <div class="text-xl text-purple-100" id="tuition-result-usd">$45,000 USD</div>
+                            
+                            <div class="mt-6 pt-6 border-t border-white/20">
+                                <h4 class="text-sm text-purple-100 mb-3">총 학비 (전체 과정)</h4>
+                                <div class="text-3xl font-bold" id="total-tuition">₩239,400,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <h3 class="font-bold mb-4">학비 세부 내역</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-gray-600">수업료</span>
+                                    <span class="font-semibold" id="tuition-classes">₩50,000,000</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-gray-600">재료비</span>
+                                    <span class="font-semibold" id="tuition-materials">₩5,000,000</span>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                                    <span class="text-gray-600">기타 비용</span>
+                                    <span class="font-semibold" id="tuition-misc">₩4,850,000</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-6 rounded-r-xl">
+                            <div class="flex">
+                                <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-blue-900 mb-2">참고사항</h4>
+                                    <p class="text-sm text-blue-700">
+                                        학비는 학교와 전공에 따라 달라질 수 있습니다. 
+                                        정확한 금액은 각 학교의 공식 웹사이트를 확인해주세요.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 생활비 계산기 -->
+            <div id="calc-living" class="calculator-content hidden">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold mb-6">생활비 정보 입력</h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">도시 선택</label>
+                                <select id="living-city" onchange="calculateLiving()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="New York">뉴욕 (New York)</option>
+                                    <option value="London">런던 (London)</option>
+                                    <option value="Paris">파리 (Paris)</option>
+                                    <option value="Berlin">베를린 (Berlin)</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">거주 형태</label>
+                                <select id="living-type" onchange="calculateLiving()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="dorm">기숙사</option>
+                                    <option value="studio">원룸</option>
+                                    <option value="share">쉐어하우스</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">생활 수준</label>
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-sm text-gray-600">검소</span>
+                                    <input type="range" id="living-level" min="0.8" max="1.5" step="0.1" value="1" onchange="calculateLiving()" class="flex-1 range-slider">
+                                    <span class="text-sm text-gray-600">여유</span>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2 text-center">현재: <span id="living-level-text">보통</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-8 text-white shadow-lg">
+                            <h3 class="text-lg mb-2 text-blue-100">월 예상 생활비</h3>
+                            <div class="text-5xl font-bold mb-4" id="living-result">₩2,500,000</div>
+                            
+                            <div class="mt-6 pt-6 border-t border-white/20">
+                                <h4 class="text-sm text-blue-100 mb-3">연간 총 생활비</h4>
+                                <div class="text-3xl font-bold" id="living-yearly">₩30,000,000</div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <h3 class="font-bold mb-4">생활비 세부 내역</h3>
+                            <canvas id="livingChart" class="mb-4"></canvas>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-purple-500 rounded-full mr-2"></div>
+                                        <span class="text-gray-600">숙박비</span>
+                                    </div>
+                                    <span class="font-semibold" id="living-rent">₩1,500,000</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-pink-500 rounded-full mr-2"></div>
+                                        <span class="text-gray-600">식비</span>
+                                    </div>
+                                    <span class="font-semibold" id="living-food">₩500,000</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                                        <span class="text-gray-600">교통비</span>
+                                    </div>
+                                    <span class="font-semibold" id="living-transport">₩120,000</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex items-center">
+                                        <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                                        <span class="text-gray-600">기타</span>
+                                    </div>
+                                    <span class="font-semibold" id="living-misc">₩380,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 장학금 예측기 -->
+            <div id="calc-scholarship" class="calculator-content hidden">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold mb-6">프로필 정보 입력</h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">GPA (4.0 만점)</label>
+                                <input type="number" id="scholarship-gpa" min="0" max="4" step="0.1" value="3.5" onchange="calculateScholarship()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">포트폴리오 수준</label>
+                                <select id="scholarship-portfolio" onchange="calculateScholarship()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="excellent">우수</option>
+                                    <option value="good">양호</option>
+                                    <option value="average">보통</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">경력/수상 경력</label>
+                                <select id="scholarship-achievement" onchange="calculateScholarship()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="high">다수 (국제 대회 등)</option>
+                                    <option value="medium">보통 (지역 대회 등)</option>
+                                    <option value="low">적음</option>
+                                    <option value="none">없음</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">재정 상황</label>
+                                <select id="scholarship-financial" onchange="calculateScholarship()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="low">재정 지원 필요</option>
+                                    <option value="medium">보통</option>
+                                    <option value="high">여유</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-8 text-white shadow-lg">
+                            <h3 class="text-lg mb-2 text-green-100">예상 장학금</h3>
+                            <div class="text-5xl font-bold mb-4" id="scholarship-result">₩20,000,000</div>
+                            <div class="text-xl text-green-100">연간</div>
+                            
+                            <div class="mt-6 pt-6 border-t border-white/20">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-green-100">장학금 확률</span>
+                                    <span class="font-bold" id="scholarship-probability">75%</span>
+                                </div>
+                                <div class="w-full bg-white/20 rounded-full h-3">
+                                    <div id="scholarship-bar" class="bg-white rounded-full h-3" style="width: 75%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <h3 class="font-bold mb-4">장학금 유형별 가능성</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-gray-700">성적 우수 장학금</span>
+                                        <span class="font-semibold text-purple-600" id="merit-percentage">60%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="merit-bar" class="bg-purple-500 rounded-full h-2" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-gray-700">재정 지원 장학금</span>
+                                        <span class="font-semibold text-blue-600" id="need-percentage">45%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="need-bar" class="bg-blue-500 rounded-full h-2" style="width: 45%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-gray-700">다양성 장학금</span>
+                                        <span class="font-semibold text-green-600" id="diversity-percentage">30%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div id="diversity-bar" class="bg-green-500 rounded-full h-2" style="width: 30%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6 rounded-r-xl">
+                            <div class="flex">
+                                <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-semibold text-yellow-900 mb-2">추천사항</h4>
+                                    <p class="text-sm text-yellow-700" id="scholarship-tip">
+                                        현재 프로필로 장학금을 받을 확률이 높습니다!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 대출 계산기 -->
+            <div id="calc-loan" class="calculator-content hidden">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white rounded-2xl p-8 shadow-sm">
+                        <h2 class="text-2xl font-bold mb-6">대출 정보 입력</h2>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">대출 금액 (만원)</label>
+                                <input type="number" id="loan-amount" value="5000" onchange="calculateLoan()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <div class="flex items-center justify-between mt-2 text-sm text-gray-500">
+                                    <span>1,000만원</span>
+                                    <span>1억원</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">대출 기간 (년)</label>
+                                <input type="range" id="loan-period" min="1" max="20" value="10" onchange="calculateLoan()" class="w-full range-slider">
+                                <p class="text-center mt-2"><span id="loan-period-text" class="font-semibold text-purple-600">10년</span></p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">연 이자율 (%)</label>
+                                <input type="number" id="loan-rate" min="1" max="15" step="0.1" value="4.5" onchange="calculateLoan()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">상환 방식</label>
+                                <select id="loan-type" onchange="calculateLoan()" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                    <option value="equal">원리금 균등</option>
+                                    <option value="principal">원금 균등</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <div class="bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl p-8 text-white shadow-lg">
+                            <h3 class="text-lg mb-2 text-orange-100">월 상환액</h3>
+                            <div class="text-5xl font-bold mb-4" id="loan-monthly">₩520,000</div>
+                            
+                            <div class="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-white/20">
+                                <div>
+                                    <p class="text-sm text-orange-100 mb-1">총 상환액</p>
+                                    <p class="text-2xl font-bold" id="loan-total">₩62,400,000</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-orange-100 mb-1">총 이자</p>
+                                    <p class="text-2xl font-bold" id="loan-interest">₩12,400,000</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <h3 class="font-bold mb-4">연도별 상환 계획</h3>
+                            <canvas id="loanChart"></canvas>
+                        </div>
+                        
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <h3 class="font-bold mb-4">초기 상환 내역 (1-3차)</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg text-sm">
+                                    <span class="text-gray-600">1차</span>
+                                    <div class="flex space-x-4">
+                                        <span>원금: <strong id="loan-p1">₩332,500</strong></span>
+                                        <span>이자: <strong id="loan-i1">₩187,500</strong></span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg text-sm">
+                                    <span class="text-gray-600">2차</span>
+                                    <div class="flex space-x-4">
+                                        <span>원금: <strong id="loan-p2">₩333,700</strong></span>
+                                        <span>이자: <strong id="loan-i2">₩186,300</strong></span>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg text-sm">
+                                    <span class="text-gray-600">3차</span>
+                                    <div class="flex space-x-4">
+                                        <span>원금: <strong id="loan-p3">₩334,900</strong></span>
+                                        <span>이자: <strong id="loan-i3">₩185,100</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-12 bg-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-4">전문가와 상담하고 싶으신가요?</h2>
+            <p class="text-gray-600 mb-8">정확한 비용 계산과 장학금 전략을 1:1로 상담받아보세요</p>
+            <a href="index.html#ai-consultant" class="inline-block gradient-bg text-white px-10 py-4 rounded-full font-bold hover:shadow-2xl transition">
+                무료 상담 신청하기
+            </a>
+        </div>
+    </section>
+
+    <script src="api-mock.js"></script>
+    <script>
+        let livingChart, loanChart;
+        
+        // 계산기 전환
+        function showCalculator(type) {
+            document.querySelectorAll('.calculator-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.querySelectorAll('.calculator-tab').forEach(tab => {
+                tab.classList.remove('bg-purple-600', 'text-white');
+                tab.classList.add('text-gray-600');
+            });
+            
+            document.getElementById('calc-' + type).classList.remove('hidden');
+            event.target.classList.add('bg-purple-600', 'text-white');
+            event.target.classList.remove('text-gray-600');
+            
+            // 차트 초기화
+            if (type === 'living' && !livingChart) {
+                initLivingChart();
+            }
+            if (type === 'loan' && !loanChart) {
+                initLoanChart();
+            }
+        }
+        
+        // 학비 계산
+        function calculateTuition() {
+            const country = document.getElementById('tuition-country').value;
+            const degree = document.getElementById('tuition-degree').value;
+            const type = document.getElementById('tuition-type').value;
+            const exchangeRate = parseFloat(document.getElementById('exchange-rate').value);
+            
+            const tuitionData = {
+                USA: { undergraduate: { min: 30000, max: 60000, avg: 45000 }, graduate: { min: 35000, max: 70000, avg: 50000 } },
+                UK: { undergraduate: { min: 20000, max: 40000, avg: 30000 }, graduate: { min: 25000, max: 50000, avg: 35000 } },
+                France: { undergraduate: { min: 5000, max: 15000, avg: 10000 }, graduate: { min: 8000, max: 20000, avg: 12000 } },
+                Germany: { undergraduate: { min: 0, max: 5000, avg: 2000 }, graduate: { min: 0, max: 8000, avg: 3000 } }
+            };
+            
+            const tuitionUSD = tuitionData[country][degree][type];
+            const tuitionKRW = tuitionUSD * exchangeRate;
+            const years = degree === 'undergraduate' ? 4 : 2;
+            const totalTuition = tuitionKRW * years;
+            
+            document.getElementById('tuition-result-usd').textContent = `$${tuitionUSD.toLocaleString()} USD`;
+            document.getElementById('tuition-result-krw').textContent = `₩${tuitionKRW.toLocaleString()}`;
+            document.getElementById('total-tuition').textContent = `₩${totalTuition.toLocaleString()}`;
+            
+            // 세부 내역
+            document.getElementById('tuition-classes').textContent = `₩${Math.round(tuitionKRW * 0.85).toLocaleString()}`;
+            document.getElementById('tuition-materials').textContent = `₩${Math.round(tuitionKRW * 0.08).toLocaleString()}`;
+            document.getElementById('tuition-misc').textContent = `₩${Math.round(tuitionKRW * 0.07).toLocaleString()}`;
+        }
+        
+        // 생활비 계산
+        function calculateLiving() {
+            const city = document.getElementById('living-city').value;
+            const type = document.getElementById('living-type').value;
+            const level = parseFloat(document.getElementById('living-level').value);
+            
+            const livingData = {
+                "New York": { rent: 2000000, food: 700000, transport: 160000, misc: 400000 },
+                "London": { rent: 1600000, food: 550000, transport: 200000, misc: 350000 },
+                "Paris": { rent: 1300000, food: 450000, transport: 100000, misc: 250000 },
+                "Berlin": { rent: 1000000, food: 400000, transport: 120000, misc: 240000 }
+            };
+            
+            const typeMultiplier = { dorm: 0.7, studio: 1, share: 0.8 };
+            const base = livingData[city];
+            
+            const rent = Math.round(base.rent * typeMultiplier[type] * level);
+            const food = Math.round(base.food * level);
+            const transport = Math.round(base.transport * level);
+            const misc = Math.round(base.misc * level);
+            const total = rent + food + transport + misc;
+            
+            document.getElementById('living-result').textContent = `₩${total.toLocaleString()}`;
+            document.getElementById('living-yearly').textContent = `₩${(total * 12).toLocaleString()}`;
+            document.getElementById('living-rent').textContent = `₩${rent.toLocaleString()}`;
+            document.getElementById('living-food').textContent = `₩${food.toLocaleString()}`;
+            document.getElementById('living-transport').textContent = `₩${transport.toLocaleString()}`;
+            document.getElementById('living-misc').textContent = `₩${misc.toLocaleString()}`;
+            
+            const levelTexts = ['검소', '검소', '보통', '보통', '여유', '여유', '매우 여유'];
+            const levelIndex = Math.round((level - 0.8) / 0.1);
+            document.getElementById('living-level-text').textContent = levelTexts[levelIndex] || '보통';
+            
+            // 차트 업데이트
+            if (livingChart) {
+                livingChart.data.datasets[0].data = [rent, food, transport, misc];
+                livingChart.update();
+            }
+        }
+        
+        // 생활비 차트 초기화
+        function initLivingChart() {
+            const ctx = document.getElementById('livingChart').getContext('2d');
+            livingChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['숙박비', '식비', '교통비', '기타'],
+                    datasets: [{
+                        data: [2000000, 700000, 160000, 400000],
+                        backgroundColor: ['#9333ea', '#ec4899', '#3b82f6', '#10b981']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+        
+        // 장학금 계산
+        function calculateScholarship() {
+            const gpa = parseFloat(document.getElementById('scholarship-gpa').value);
+            const portfolio = document.getElementById('scholarship-portfolio').value;
+            const achievement = document.getElementById('scholarship-achievement').value;
+            const financial = document.getElementById('scholarship-financial').value;
+            
+            // 점수 계산
+            let score = 0;
+            score += (gpa / 4) * 30;
+            score += { excellent: 30, good: 20, average: 10 }[portfolio];
+            score += { high: 25, medium: 15, low: 5, none: 0 }[achievement];
+            score += { low: 15, medium: 5, high: 0 }[financial];
+            
+            const probability = Math.min(score, 95);
+            const scholarshipAmount = Math.round((20000000 * (score / 100)));
+            
+            document.getElementById('scholarship-result').textContent = `₩${scholarshipAmount.toLocaleString()}`;
+            document.getElementById('scholarship-probability').textContent = `${Math.round(probability)}%`;
+            document.getElementById('scholarship-bar').style.width = `${probability}%`;
+            
+            // 유형별 확률
+            const meritPercentage = Math.min(gpa * 15 + (portfolio === 'excellent' ? 30 : portfolio === 'good' ? 15 : 5), 85);
+            const needPercentage = financial === 'low' ? 70 : financial === 'medium' ? 40 : 15;
+            const diversityPercentage = 30 + (achievement === 'high' ? 20 : achievement === 'medium' ? 10 : 0);
+            
+            document.getElementById('merit-percentage').textContent = `${Math.round(meritPercentage)}%`;
+            document.getElementById('merit-bar').style.width = `${meritPercentage}%`;
+            document.getElementById('need-percentage').textContent = `${Math.round(needPercentage)}%`;
+            document.getElementById('need-bar').style.width = `${needPercentage}%`;
+            document.getElementById('diversity-percentage').textContent = `${Math.round(diversityPercentage)}%`;
+            document.getElementById('diversity-bar').style.width = `${diversityPercentage}%`;
+            
+            // 추천사항
+            let tip = '';
+            if (probability >= 70) {
+                tip = '현재 프로필로 장학금을 받을 확률이 높습니다! 여러 학교에 지원하는 것을 추천합니다.';
+            } else if (probability >= 50) {
+                tip = '장학금 가능성이 있습니다. 포트폴리오를 더 보완하면 확률이 높아질 수 있습니다.';
+            } else {
+                tip = '장학금 확률을 높이기 위해 포트폴리오 강화와 수상 경력을 쌓는 것을 추천합니다.';
+            }
+            document.getElementById('scholarship-tip').textContent = tip;
+        }
+        
+        // 대출 계산
+        function calculateLoan() {
+            const amount = parseFloat(document.getElementById('loan-amount').value) * 10000;
+            const period = parseInt(document.getElementById('loan-period').value);
+            const rate = parseFloat(document.getElementById('loan-rate').value) / 100;
+            const type = document.getElementById('loan-type').value;
+            
+            document.getElementById('loan-period-text').textContent = `${period}년`;
+            
+            const months = period * 12;
+            const monthlyRate = rate / 12;
+            
+            let monthly, total, interest;
+            
+            if (type === 'equal') {
+                // 원리금 균등
+                monthly = Math.round(amount * monthlyRate * Math.pow(1 + monthlyRate, months) / (Math.pow(1 + monthlyRate, months) - 1));
+                total = monthly * months;
+                interest = total - amount;
+            } else {
+                // 원금 균등
+                const principalMonthly = amount / months;
+                monthly = Math.round(principalMonthly + (amount * monthlyRate));
+                total = Math.round(amount + (amount * monthlyRate * (months + 1) / 2));
+                interest = total - amount;
+            }
+            
+            document.getElementById('loan-monthly').textContent = `₩${monthly.toLocaleString()}`;
+            document.getElementById('loan-total').textContent = `₩${total.toLocaleString()}`;
+            document.getElementById('loan-interest').textContent = `₩${interest.toLocaleString()}`;
+            
+            // 초기 상환 내역
+            const p1 = Math.round(monthly - (amount * monthlyRate));
+            const i1 = Math.round(amount * monthlyRate);
+            document.getElementById('loan-p1').textContent = `₩${p1.toLocaleString()}`;
+            document.getElementById('loan-i1').textContent = `₩${i1.toLocaleString()}`;
+            
+            const p2 = Math.round(monthly - ((amount - p1) * monthlyRate));
+            const i2 = Math.round((amount - p1) * monthlyRate);
+            document.getElementById('loan-p2').textContent = `₩${p2.toLocaleString()}`;
+            document.getElementById('loan-i2').textContent = `₩${i2.toLocaleString()}`;
+            
+            const p3 = Math.round(monthly - ((amount - p1 - p2) * monthlyRate));
+            const i3 = Math.round((amount - p1 - p2) * monthlyRate);
+            document.getElementById('loan-p3').textContent = `₩${p3.toLocaleString()}`;
+            document.getElementById('loan-i3').textContent = `₩${i3.toLocaleString()}`;
+            
+            // 차트 업데이트
+            if (loanChart) {
+                const yearlyData = [];
+                for (let i = 1; i <= period; i++) {
+                    yearlyData.push(monthly * 12);
+                }
+                loanChart.data.datasets[0].data = yearlyData;
+                loanChart.data.labels = yearlyData.map((_, i) => `${i + 1}년차`);
+                loanChart.update();
+            }
+        }
+        
+        // 대출 차트 초기화
+        function initLoanChart() {
+            const ctx = document.getElementById('loanChart').getContext('2d');
+            loanChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1년차', '2년차', '3년차', '4년차', '5년차', '6년차', '7년차', '8년차', '9년차', '10년차'],
+                    datasets: [{
+                        label: '연간 상환액',
+                        data: [6240000, 6240000, 6240000, 6240000, 6240000, 6240000, 6240000, 6240000, 6240000, 6240000],
+                        backgroundColor: '#f97316'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₩' + (value / 10000).toFixed(0) + '만';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+        
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateTuition();
+            calculateLiving();
+            calculateScholarship();
+            calculateLoan();
+        });
+    </script>
+</body>
+</html>

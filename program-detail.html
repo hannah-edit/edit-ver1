@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로그램 상세 - Edit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .blur-backdrop {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .progress-ring {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 네비게이션 -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-3xl font-bold gradient-text">Edit</a>
+                    <span class="ml-3 text-gray-600 text-sm">미술 유학의 새로운 시작</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="index.html" class="text-gray-700 hover:text-purple-600 transition">홈으로</a>
+                    <button onclick="openEnrollModal()" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-2 rounded-full hover:shadow-lg transition">
+                        수강 신청
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 프로그램 헤더 -->
+    <section class="pt-24 pb-12 gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <span class="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">인기</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-sm">온라인</span>
+                        <span class="bg-white/20 px-3 py-1 rounded-full text-sm">8주 과정</span>
+                    </div>
+                    <h1 class="text-5xl font-bold mb-4" id="program-title">포트폴리오 마스터클래스</h1>
+                    <p class="text-xl text-purple-100 mb-6" id="program-description">
+                        세계 Top 10 미대 합격생의 노하우를 배우는 8주 집중 과정
+                    </p>
+                    <div class="flex items-center space-x-6 mb-6">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-white/20 rounded-full mr-3"></div>
+                            <div>
+                                <p class="font-semibold" id="instructor-name">김아트 작가</p>
+                                <div class="flex items-center text-sm">
+                                    <i class="fas fa-star text-yellow-300 mr-1"></i>
+                                    <span>4.9 (156 리뷰)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="blur-backdrop rounded-xl p-4">
+                            <p class="text-sm text-purple-800">수강생</p>
+                            <p class="text-2xl font-bold text-purple-900" id="enrolled-count">23명</p>
+                        </div>
+                        <div class="blur-backdrop rounded-xl p-4">
+                            <p class="text-sm text-purple-800">소요 시간</p>
+                            <p class="text-2xl font-bold text-purple-900">8주</p>
+                        </div>
+                        <div class="blur-backdrop rounded-xl p-4">
+                            <p class="text-sm text-purple-800">레벨</p>
+                            <p class="text-2xl font-bold text-purple-900">중급</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 수강 신청 카드 -->
+                <div class="bg-white rounded-3xl p-8 shadow-2xl">
+                    <div class="mb-6">
+                        <div class="flex items-baseline mb-2">
+                            <span class="text-4xl font-bold text-gray-900">₩500,000</span>
+                            <span class="text-gray-500 ml-2 line-through">₩700,000</span>
+                        </div>
+                        <p class="text-green-600 font-semibold">
+                            <i class="fas fa-tag mr-1"></i>28% 할인 중
+                        </p>
+                    </div>
+                    
+                    <div class="space-y-3 mb-6">
+                        <div class="flex items-center text-gray-700">
+                            <i class="fas fa-calendar-alt w-6 text-purple-600"></i>
+                            <span>시작일: 2026년 3월 1일</span>
+                        </div>
+                        <div class="flex items-center text-gray-700">
+                            <i class="fas fa-clock w-6 text-purple-600"></i>
+                            <span>매주 토요일 14:00-16:00</span>
+                        </div>
+                        <div class="flex items-center text-gray-700">
+                            <i class="fas fa-video w-6 text-purple-600"></i>
+                            <span>실시간 Zoom 세션</span>
+                        </div>
+                        <div class="flex items-center text-gray-700">
+                            <i class="fas fa-certificate w-6 text-purple-600"></i>
+                            <span>수료증 발급</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="openEnrollModal()" class="w-full gradient-bg text-white py-4 rounded-full font-bold text-lg hover:shadow-2xl transition mb-3">
+                        지금 수강 신청하기
+                    </button>
+                    <button onclick="openTrialModal()" class="w-full border-2 border-purple-600 text-purple-600 py-3 rounded-full font-semibold hover:bg-purple-50 transition">
+                        무료 체험 신청
+                    </button>
+                    
+                    <div class="mt-6 pt-6 border-t">
+                        <p class="text-sm text-gray-600 text-center mb-3">
+                            <i class="fas fa-users mr-2"></i>이미 <strong>156명</strong>이 수강했습니다
+                        </p>
+                        <div class="flex -space-x-2 justify-center">
+                            <div class="w-8 h-8 bg-purple-200 rounded-full border-2 border-white"></div>
+                            <div class="w-8 h-8 bg-pink-200 rounded-full border-2 border-white"></div>
+                            <div class="w-8 h-8 bg-blue-200 rounded-full border-2 border-white"></div>
+                            <div class="w-8 h-8 bg-green-200 rounded-full border-2 border-white"></div>
+                            <div class="w-8 h-8 bg-yellow-200 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold">
+                                +151
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 탭 메뉴 -->
+    <section class="bg-white sticky top-16 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-8 overflow-x-auto">
+                <button class="tab-menu tab-active py-4 px-2 font-semibold whitespace-nowrap" onclick="showTab('overview')">
+                    개요
+                </button>
+                <button class="tab-menu py-4 px-2 font-semibold whitespace-nowrap text-gray-600" onclick="showTab('curriculum')">
+                    커리큘럼
+                </button>
+                <button class="tab-menu py-4 px-2 font-semibold whitespace-nowrap text-gray-600" onclick="showTab('instructor')">
+                    강사 소개
+                </button>
+                <button class="tab-menu py-4 px-2 font-semibold whitespace-nowrap text-gray-600" onclick="showTab('reviews')">
+                    수강 후기
+                </button>
+                <button class="tab-menu py-4 px-2 font-semibold whitespace-nowrap text-gray-600" onclick="showTab('faq')">
+                    FAQ
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 탭 컨텐츠 -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 메인 컨텐츠 -->
+                <div class="md:col-span-2">
+                    <!-- 개요 탭 -->
+                    <div id="tab-overview" class="tab-content">
+                        <div class="bg-white rounded-2xl p-8 shadow-sm mb-6">
+                            <h2 class="text-3xl font-bold mb-6">프로그램 소개</h2>
+                            <div class="prose max-w-none">
+                                <p class="text-gray-700 text-lg leading-relaxed mb-4">
+                                    세계 최고 수준의 미술대학 합격을 위한 포트폴리오를 완성하는 8주 집중 과정입니다. 
+                                    Parsons, RISD, RCA 등 Top 10 미술대학 합격생들의 실제 포트폴리오를 분석하고, 
+                                    여러분만의 독창적인 작품 세계를 구축하는 방법을 배웁니다.
+                                </p>
+                                <p class="text-gray-700 text-lg leading-relaxed mb-6">
+                                    현직 작가이자 미술대학 입학 심사위원 경험이 있는 강사진이 1:1 맞춤형 피드백을 제공하여, 
+                                    단순한 기술 향상을 넘어 예술적 사고와 표현력을 극대화합니다.
+                                </p>
+                                
+                                <h3 class="text-2xl font-bold mt-8 mb-4">이런 분들께 추천합니다</h3>
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div class="flex items-start p-4 bg-purple-50 rounded-xl">
+                                        <i class="fas fa-check-circle text-purple-600 mt-1 mr-3"></i>
+                                        <span class="text-gray-700">해외 미술대학 진학을 준비하는 학생</span>
+                                    </div>
+                                    <div class="flex items-start p-4 bg-purple-50 rounded-xl">
+                                        <i class="fas fa-check-circle text-purple-600 mt-1 mr-3"></i>
+                                        <span class="text-gray-700">포트폴리오를 체계적으로 구성하고 싶은 분</span>
+                                    </div>
+                                    <div class="flex items-start p-4 bg-purple-50 rounded-xl">
+                                        <i class="fas fa-check-circle text-purple-600 mt-1 mr-3"></i>
+                                        <span class="text-gray-700">전문가의 1:1 피드백이 필요한 분</span>
+                                    </div>
+                                    <div class="flex items-start p-4 bg-purple-50 rounded-xl">
+                                        <i class="fas fa-check-circle text-purple-600 mt-1 mr-3"></i>
+                                        <span class="text-gray-700">자신만의 예술적 정체성을 찾고 싶은 분</span>
+                                    </div>
+                                </div>
+                                
+                                <h3 class="text-2xl font-bold mt-8 mb-4">학습 결과물</h3>
+                                <ul class="space-y-3">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-star text-yellow-400 mt-1 mr-3"></i>
+                                        <span class="text-gray-700">15-20점의 완성된 포트폴리오 작품</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-star text-yellow-400 mt-1 mr-3"></i>
+                                        <span class="text-gray-700">전문적인 작품 설명문 (Artist Statement)</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-star text-yellow-400 mt-1 mr-3"></i>
+                                        <span class="text-gray-700">디지털 포트폴리오 PDF</span>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-star text-yellow-400 mt-1 mr-3"></i>
+                                        <span class="text-gray-700">강사의 상세 평가 리포트</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 커리큘럼 탭 -->
+                    <div id="tab-curriculum" class="tab-content hidden">
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <h2 class="text-3xl font-bold mb-6">8주 커리큘럼</h2>
+                            
+                            <div class="space-y-4">
+                                <div class="border-l-4 border-purple-600 pl-6 py-4 hover:bg-purple-50 transition rounded-r-xl">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h3 class="text-xl font-bold">Week 1: 포트폴리오 기획 및 컨셉 설정</h3>
+                                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">2시간</span>
+                                    </div>
+                                    <p class="text-gray-600 mb-3">자신만의 예술적 비전 발견 및 포트폴리오 방향성 설정</p>
+                                    <ul class="text-sm text-gray-500 space-y-1 ml-4">
+                                        <li>• 세계 Top 10 미대 합격 포트폴리오 분석</li>
+                                        <li>• 개인 작품 세계 탐구 워크샵</li>
+                                        <li>• 포트폴리오 구성 전략 수립</li>
+                                    </ul>
+                                </div>
+
+                                <div class="border-l-4 border-pink-600 pl-6 py-4 hover:bg-pink-50 transition rounded-r-xl">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h3 class="text-xl font-bold">Week 2-3: 작품 선정 및 재구성</h3>
+                                        <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm">4시간</span>
+                                    </div>
+                                    <p class="text-gray-600 mb-3">기존 작품 분석 및 새로운 작품 기획</p>
+                                    <ul class="text-sm text-gray-500 space-y-1 ml-4">
+                                        <li>• 기존 작품 크리틱 세션</li>
+                                        <li>• 부족한 영역 파악 및 보완 계획</li>
+                                        <li>• 작품 간 내러티브 구축</li>
+                                    </ul>
+                                </div>
+
+                                <div class="border-l-4 border-blue-600 pl-6 py-4 hover:bg-blue-50 transition rounded-r-xl">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h3 class="text-xl font-bold">Week 4-6: 작품 제작 및 집중 피드백</h3>
+                                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">6시간</span>
+                                    </div>
+                                    <p class="text-gray-600 mb-3">주간 제작 + 1:1 맞춤형 피드백</p>
+                                    <ul class="text-sm text-gray-500 space-y-1 ml-4">
+                                        <li>• 주간 작품 제작 과제</li>
+                                        <li>• 매주 1:1 온라인 크리틱</li>
+                                        <li>• 기술적/개념적 문제 해결</li>
+                                    </ul>
+                                </div>
+
+                                <div class="border-l-4 border-green-600 pl-6 py-4 hover:bg-green-50 transition rounded-r-xl">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h3 class="text-xl font-bold">Week 7-8: 최종 포트폴리오 완성</h3>
+                                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">4시간</span>
+                                    </div>
+                                    <p class="text-gray-600 mb-3">디지털 포트폴리오 제작 및 최종 리뷰</p>
+                                    <ul class="text-sm text-gray-500 space-y-1 ml-4">
+                                        <li>• 작품 사진 촬영 및 편집 가이드</li>
+                                        <li>• Artist Statement 작성</li>
+                                        <li>• PDF 포트폴리오 디자인</li>
+                                        <li>• 최종 프레젠테이션 및 피드백</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 강사 소개 탭 -->
+                    <div id="tab-instructor" class="tab-content hidden">
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <div class="flex items-start space-x-6 mb-8">
+                                <div class="w-32 h-32 bg-gradient-to-br from-purple-400 to-indigo-500 rounded-2xl flex-shrink-0"></div>
+                                <div>
+                                    <h2 class="text-3xl font-bold mb-2">김아트</h2>
+                                    <p class="text-gray-600 mb-4">현대미술 작가 · Parsons 졸업 · 20년 경력</p>
+                                    <div class="flex items-center space-x-4 text-sm">
+                                        <span class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400 mr-1"></i>
+                                            4.9 평점
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-users text-purple-600 mr-1"></i>
+                                            156명 수강
+                                        </span>
+                                        <span class="flex items-center">
+                                            <i class="fas fa-video text-blue-600 mr-1"></i>
+                                            12개 강의
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="prose max-w-none">
+                                <h3 class="text-2xl font-bold mb-4">약력</h3>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• Parsons School of Design MFA 졸업 (2005)</li>
+                                    <li>• 서울대학교 미술대학 학사 (2000)</li>
+                                    <li>• 현) 서울 아트갤러리 전속 작가</li>
+                                    <li>• 전) RISD 입학 심사위원 (2015-2020)</li>
+                                </ul>
+                                
+                                <h3 class="text-2xl font-bold mt-8 mb-4">주요 전시</h3>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li>• 2023 "Modern Perspectives" 개인전, 서울 갤러리</li>
+                                    <li>• 2022 "Contemporary Visions" 그룹전, 뉴욕</li>
+                                    <li>• 2021 "Art Basel" 참여, 마이애미</li>
+                                </ul>
+                                
+                                <h3 class="text-2xl font-bold mt-8 mb-4">전문 분야</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-purple-100 text-purple-700 px-4 py-2 rounded-full">회화</span>
+                                    <span class="bg-pink-100 text-pink-700 px-4 py-2 rounded-full">현대미술</span>
+                                    <span class="bg-blue-100 text-blue-700 px-4 py-2 rounded-full">포트폴리오 리뷰</span>
+                                    <span class="bg-green-100 text-green-700 px-4 py-2 rounded-full">입학 컨설팅</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 수강 후기 탭 -->
+                    <div id="tab-reviews" class="tab-content hidden">
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <div class="flex justify-between items-center mb-8">
+                                <h2 class="text-3xl font-bold">수강 후기</h2>
+                                <div class="text-center">
+                                    <div class="text-4xl font-bold text-purple-600">4.9</div>
+                                    <div class="flex items-center justify-center mt-1">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-1">156개 리뷰</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div class="border-b pb-6">
+                                    <div class="flex items-start mb-3">
+                                        <div class="w-12 h-12 bg-purple-200 rounded-full mr-4"></div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <h4 class="font-bold">김서연</h4>
+                                                    <p class="text-sm text-gray-500">Parsons 합격</p>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-700 leading-relaxed">
+                                                포트폴리오를 준비하면서 가장 큰 도움을 받았어요. 김아트 작가님의 세심한 피드백 덕분에 
+                                                작품의 완성도가 훨씬 높아졌고, 결국 꿈에 그리던 Parsons에 합격했습니다! 
+                                                단순히 기술적인 지도가 아니라 예술적 사고방식을 배울 수 있어서 정말 좋았어요.
+                                            </p>
+                                            <p class="text-sm text-gray-400 mt-2">2개월 전</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border-b pb-6">
+                                    <div class="flex items-start mb-3">
+                                        <div class="w-12 h-12 bg-pink-200 rounded-full mr-4"></div>
+                                        <div class="flex-1">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <h4 class="font-bold">이준호</h4>
+                                                    <p class="text-sm text-gray-500">RCA 지원 중</p>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                    <i class="fas fa-star text-yellow-400"></i>
+                                                </div>
+                                            </div>
+                                            <p class="text-gray-700 leading-relaxed">
+                                                8주 과정이 정말 알차게 구성되어 있어요. 매주 새로운 것을 배우고 즉시 적용해볼 수 있어서 
+                                                실력이 눈에 띄게 향상되었습니다. 특히 1:1 피드백 시간이 가장 유익했어요!
+                                            </p>
+                                            <p class="text-sm text-gray-400 mt-2">1개월 전</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 탭 -->
+                    <div id="tab-faq" class="tab-content hidden">
+                        <div class="bg-white rounded-2xl p-8 shadow-sm">
+                            <h2 class="text-3xl font-bold mb-6">자주 묻는 질문</h2>
+                            
+                            <div class="space-y-4">
+                                <details class="group border rounded-xl p-6 cursor-pointer hover:bg-gray-50">
+                                    <summary class="font-semibold text-lg flex justify-between items-center">
+                                        초보자도 수강할 수 있나요?
+                                        <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                                    </summary>
+                                    <p class="mt-4 text-gray-600">
+                                        이 과정은 중급 이상을 대상으로 하지만, 기본적인 미술 실력이 있다면 충분히 수강 가능합니다. 
+                                        사전 상담을 통해 레벨을 확인하고 맞춤형 가이드를 제공해드립니다.
+                                    </p>
+                                </details>
+
+                                <details class="group border rounded-xl p-6 cursor-pointer hover:bg-gray-50">
+                                    <summary class="font-semibold text-lg flex justify-between items-center">
+                                        수업을 놓치면 어떻게 되나요?
+                                        <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                                    </summary>
+                                    <p class="mt-4 text-gray-600">
+                                        모든 세션은 녹화되어 제공되므로 복습이 가능합니다. 다만 1:1 피드백 시간은 사전 조율을 통해 
+                                        다른 시간으로 변경 가능합니다.
+                                    </p>
+                                </details>
+
+                                <details class="group border rounded-xl p-6 cursor-pointer hover:bg-gray-50">
+                                    <summary class="font-semibold text-lg flex justify-between items-center">
+                                        환불 정책은 어떻게 되나요?
+                                        <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                                    </summary>
+                                    <p class="mt-4 text-gray-600">
+                                        첫 수업 후 1주일 이내에는 100% 환불이 가능합니다. 이후에는 남은 수업 일수에 비례하여 
+                                        환불해드립니다.
+                                    </p>
+                                </details>
+
+                                <details class="group border rounded-xl p-6 cursor-pointer hover:bg-gray-50">
+                                    <summary class="font-semibold text-lg flex justify-between items-center">
+                                        수료증은 제공되나요?
+                                        <i class="fas fa-chevron-down group-open:rotate-180 transition"></i>
+                                    </summary>
+                                    <p class="mt-4 text-gray-600">
+                                        네, 8주 과정을 모두 이수하시면 Edit 공식 수료증이 발급됩니다. 이는 대학 지원 시 
+                                        포트폴리오에 첨부하실 수 있습니다.
+                                    </p>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 사이드바 -->
+                <div class="md:col-span-1">
+                    <div class="sticky top-24 space-y-6">
+                        <!-- 추천 프로그램 -->
+                        <div class="bg-white rounded-2xl p-6 shadow-sm">
+                            <h3 class="font-bold text-lg mb-4">함께 들으면 좋은 프로그램</h3>
+                            <div class="space-y-4">
+                                <div class="border rounded-xl p-4 hover:shadow-md transition cursor-pointer">
+                                    <h4 class="font-semibold mb-2">파인아트 집중 과정</h4>
+                                    <p class="text-sm text-gray-600 mb-2">현대미술 작가와의 8주 프로젝트</p>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-purple-600 font-bold">₩1,200,000</span>
+                                        <i class="fas fa-arrow-right text-gray-400"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 공유하기 -->
+                        <div class="bg-white rounded-2xl p-6 shadow-sm">
+                            <h3 class="font-bold text-lg mb-4">프로그램 공유하기</h3>
+                            <div class="flex space-x-3">
+                                <button class="flex-1 border rounded-lg py-2 hover:bg-gray-50 transition">
+                                    <i class="fab fa-facebook-f text-blue-600"></i>
+                                </button>
+                                <button class="flex-1 border rounded-lg py-2 hover:bg-gray-50 transition">
+                                    <i class="fab fa-twitter text-blue-400"></i>
+                                </button>
+                                <button class="flex-1 border rounded-lg py-2 hover:bg-gray-50 transition">
+                                    <i class="fas fa-link text-gray-600"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 수강 신청 모달 -->
+    <div id="enrollModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 relative">
+            <button onclick="closeEnrollModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <h3 class="text-3xl font-bold mb-6">수강 신청</h3>
+            
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">이름 *</label>
+                    <input type="text" required class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="홍길동">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">이메일 *</label>
+                    <input type="email" required class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="email@example.com">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">전화번호 *</label>
+                    <input type="tel" required class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="010-0000-0000">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">지원 목표 학교</label>
+                    <input type="text" class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="예: Parsons, RISD">
+                </div>
+                
+                <div class="pt-4">
+                    <button type="submit" class="w-full gradient-bg text-white py-4 rounded-xl font-bold hover:shadow-2xl transition">
+                        ₩500,000 결제하고 수강하기
+                    </button>
+                    <p class="text-xs text-gray-500 text-center mt-3">
+                        결제 후 7일 이내 100% 환불 가능
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 무료 체험 모달 -->
+    <div id="trialModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 relative">
+            <button onclick="closeTrialModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+            
+            <h3 class="text-3xl font-bold mb-2">무료 체험 신청</h3>
+            <p class="text-gray-600 mb-6">첫 수업을 무료로 체험해보세요</p>
+            
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">이름 *</label>
+                    <input type="text" required class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">이메일 *</label>
+                    <input type="email" required class="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                
+                <button type="submit" class="w-full gradient-bg text-white py-4 rounded-xl font-bold hover:shadow-2xl transition">
+                    무료 체험 신청하기
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="api-mock.js"></script>
+    <script>
+        // 탭 전환
+        function showTab(tabName) {
+            // 모든 탭 컨텐츠 숨기기
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // 모든 탭 메뉴 비활성화
+            document.querySelectorAll('.tab-menu').forEach(menu => {
+                menu.classList.remove('tab-active');
+                menu.classList.add('text-gray-600');
+            });
+            
+            // 선택된 탭 표시
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            event.target.classList.add('tab-active');
+            event.target.classList.remove('text-gray-600');
+        }
+        
+        // 수강 신청 모달
+        function openEnrollModal() {
+            document.getElementById('enrollModal').classList.remove('hidden');
+            document.getElementById('enrollModal').classList.add('flex');
+        }
+        
+        function closeEnrollModal() {
+            document.getElementById('enrollModal').classList.add('hidden');
+            document.getElementById('enrollModal').classList.remove('flex');
+        }
+        
+        // 무료 체험 모달
+        function openTrialModal() {
+            document.getElementById('trialModal').classList.remove('hidden');
+            document.getElementById('trialModal').classList.add('flex');
+        }
+        
+        function closeTrialModal() {
+            document.getElementById('trialModal').classList.add('hidden');
+            document.getElementById('trialModal').classList.remove('flex');
+        }
+        
+        // URL 파라미터에서 프로그램 ID 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const programId = urlParams.get('id');
+        
+        // 프로그램 데이터 로드
+        if (programId && window.MockAPI) {
+            MockAPI.getProgramById(parseInt(programId)).then(program => {
+                if (program) {
+                    document.getElementById('program-title').textContent = program.title;
+                    document.getElementById('program-description').textContent = program.description;
+                    document.getElementById('instructor-name').textContent = program.instructor;
+                    document.getElementById('enrolled-count').textContent = program.enrolledStudents + '명';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

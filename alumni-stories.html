@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>졸업생 스토리 - Edit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .story-card {
+            transition: all 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 네비게이션 -->
+    <nav class="bg-white shadow-lg fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-3xl font-bold gradient-text">Edit</a>
+                    <span class="ml-3 text-gray-600 text-sm">미술 유학의 새로운 시작</span>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="index.html" class="text-gray-700 hover:text-purple-600 transition">홈으로</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 헤더 -->
+    <section class="pt-24 pb-16 gradient-bg text-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute transform rotate-45 -right-20 top-20 w-96 h-96 bg-white rounded-full"></div>
+            <div class="absolute transform -rotate-12 -left-32 bottom-10 w-80 h-80 bg-white rounded-full"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h1 class="text-5xl font-bold mb-4">학습자에서 성취자로</h1>
+            <p class="text-xl text-purple-100 mb-8">Edit과 함께 꿈을 이룬 아티스트들의 진짜 이야기</p>
+            <div class="flex justify-center space-x-8 text-center">
+                <div>
+                    <div class="text-4xl font-bold">500+</div>
+                    <div class="text-purple-100">합격생</div>
+                </div>
+                <div class="h-16 w-px bg-white/30"></div>
+                <div>
+                    <div class="text-4xl font-bold">98%</div>
+                    <div class="text-purple-100">합격률</div>
+                </div>
+                <div class="h-16 w-px bg-white/30"></div>
+                <div>
+                    <div class="text-4xl font-bold">Top 10</div>
+                    <div class="text-purple-100">미대 진학</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 필터 -->
+    <section class="py-8 bg-white border-b sticky top-16 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button onclick="filterStories('all')" class="filter-btn active px-6 py-2 rounded-full font-semibold transition bg-purple-600 text-white">
+                    전체
+                </button>
+                <button onclick="filterStories('usa')" class="filter-btn px-6 py-2 rounded-full font-semibold transition border hover:bg-gray-50">
+                    미국
+                </button>
+                <button onclick="filterStories('uk')" class="filter-btn px-6 py-2 rounded-full font-semibold transition border hover:bg-gray-50">
+                    영국
+                </button>
+                <button onclick="filterStories('fashion')" class="filter-btn px-6 py-2 rounded-full font-semibold transition border hover:bg-gray-50">
+                    패션
+                </button>
+                <button onclick="filterStories('fine-art')" class="filter-btn px-6 py-2 rounded-full font-semibold transition border hover:bg-gray-50">
+                    순수미술
+                </button>
+                <button onclick="filterStories('design')" class="filter-btn px-6 py-2 rounded-full font-semibold transition border hover:bg-gray-50">
+                    디자인
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 졸업생 스토리 그리드 -->
+    <section class="py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 스토리 카드 1 -->
+                <div class="story-card bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer" data-category="usa fashion" onclick="openStoryModal(1)">
+                    <div class="h-64 bg-gradient-to-br from-purple-400 to-indigo-500 relative">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-purple-600">
+                            Parsons
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">김서연</h3>
+                        <p class="text-gray-600 mb-4">Parsons School of Design · 패션 디자인</p>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            "온라인으로 시작해서 뉴욕으로 전환했어요. 비용도 절약하고 준비 시간도 충분히 가질 수 있었습니다."
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">미국</span>
+                                <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm">패션</span>
+                            </div>
+                            <span class="text-purple-600 font-semibold">자세히 보기 →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 스토리 카드 2 -->
+                <div class="story-card bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer" data-category="uk design" onclick="openStoryModal(2)">
+                    <div class="h-64 bg-gradient-to-br from-pink-400 to-rose-500 relative">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-pink-600">
+                            RCA
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">이준호</h3>
+                        <p class="text-gray-600 mb-4">Royal College of Art · 그래픽 디자인</p>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            "AI 포트폴리오 분석 덕분에 약점을 보완하고 합격할 수 있었습니다. 정말 획기적이었어요."
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">영국</span>
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">디자인</span>
+                            </div>
+                            <span class="text-pink-600 font-semibold">자세히 보기 →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 스토리 카드 3 -->
+                <div class="story-card bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer" data-category="usa fine-art" onclick="openStoryModal(3)">
+                    <div class="h-64 bg-gradient-to-br from-blue-400 to-cyan-500 relative">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-blue-600">
+                            RISD
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">박지민</h3>
+                        <p class="text-gray-600 mb-4">Rhode Island School of Design · 순수미술</p>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            "현역 작가님과의 1:1 멘토링이 제 작품 세계를 완전히 바꿔놓았습니다."
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">미국</span>
+                                <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">순수미술</span>
+                            </div>
+                            <span class="text-blue-600 font-semibold">자세히 보기 →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 스토리 카드 4 -->
+                <div class="story-card bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer" data-category="uk design" onclick="openStoryModal(4)">
+                    <div class="h-64 bg-gradient-to-br from-green-400 to-emerald-500 relative">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-green-600">
+                            CSM
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">최민수</h3>
+                        <p class="text-gray-600 mb-4">Central Saint Martins · 제품 디자인</p>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            "Edit의 체계적인 프로그램 덕분에 꿈의 학교에 합격할 수 있었어요."
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">영국</span>
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">디자인</span>
+                            </div>
+                            <span class="text-green-600 font-semibold">자세히 보기 →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 스토리 카드 5 -->
+                <div class="story-card bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer" data-category="usa fashion" onclick="openStoryModal(5)">
+                    <div class="h-64 bg-gradient-to-br from-yellow-400 to-orange-500 relative">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-orange-600">
+                            FIT
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">정수아</h3>
+                        <p class="text-gray-600 mb-4">Fashion Institute of Technology · 패션 마케팅</p>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            "포트폴리오뿐 아니라 인터뷰 준비까지 꼼꼼하게 도와주셔서 감사했어요."
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">미국</span>
+                                <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm">패션</span>
+                            </div>
+                            <span class="text-orange-600 font-semibold">자세히 보기 →</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 스토리 카드 6 -->
+                <div class="story-card bg-white rounded-2xl overflow-hidden shadow-sm cursor-pointer" data-category="usa fine-art" onclick="openStoryModal(6)">
+                    <div class="h-64 bg-gradient-to-br from-red-400 to-pink-500 relative">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-sm font-semibold text-red-600">
+                            Yale
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold mb-2">강민재</h3>
+                        <p class="text-gray-600 mb-4">Yale School of Art · 회화</p>
+                        <p class="text-gray-700 mb-4 line-clamp-3">
+                            "불가능해 보였던 Yale 합격! Edit 없이는 상상도 못했을 거예요."
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">미국</span>
+                                <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">순수미술</span>
+                            </div>
+                            <span class="text-red-600 font-semibold">자세히 보기 →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="py-16 gradient-bg text-white">
+        <div class="max-w-4xl mx-auto px-4 text-center">
+            <h2 class="text-4xl font-bold mb-4">당신의 성공 스토리를 만들어보세요</h2>
+            <p class="text-xl text-purple-100 mb-8">다음 주인공은 바로 당신입니다</p>
+            <a href="index.html#ai-consultant" class="inline-block bg-white text-purple-600 px-10 py-4 rounded-full font-bold hover:shadow-2xl transition">
+                무료 상담 시작하기
+            </a>
+        </div>
+    </section>
+
+    <!-- 스토리 상세 모달 -->
+    <div id="storyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-4xl w-full my-8">
+            <div class="relative h-96 gradient-bg rounded-t-3xl overflow-hidden">
+                <button onclick="closeStoryModal()" class="absolute top-6 right-6 bg-white/20 backdrop-blur w-12 h-12 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <div class="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/60 to-transparent text-white">
+                    <h2 class="text-4xl font-bold mb-2" id="modal-name">김서연</h2>
+                    <p class="text-xl text-purple-100" id="modal-school">Parsons School of Design · 패션 디자인</p>
+                </div>
+            </div>
+            
+            <div class="p-8">
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold mb-4">저의 이야기</h3>
+                    <p class="text-gray-700 leading-relaxed text-lg" id="modal-story">
+                        처음에는 미국 유학이 막연하고 두려웠어요. 학비도 걱정이었고, 포트폴리오도 어디서부터 시작해야 할지 몰랐죠...
+                    </p>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold mb-4">Q&A</h3>
+                    <div class="space-y-4">
+                        <div class="bg-purple-50 rounded-xl p-6">
+                            <p class="font-semibold text-purple-900 mb-2">Q. Edit을 선택한 이유는?</p>
+                            <p class="text-gray-700" id="modal-q1">AI 기반 포트폴리오 분석과 현역 작가님들의 멘토링이 큰 도움이 되었습니다.</p>
+                        </div>
+                        <div class="bg-blue-50 rounded-xl p-6">
+                            <p class="font-semibold text-blue-900 mb-2">Q. 가장 기억에 남는 순간은?</p>
+                            <p class="text-gray-700" id="modal-q2">파슨스 합격 통보를 받았을 때 가장 먼저 Edit 컨설턴트님께 연락했어요.</p>
+                        </div>
+                        <div class="bg-green-50 rounded-xl p-6">
+                            <p class="font-semibold text-green-900 mb-2">Q. 후배들에게 조언한다면?</p>
+                            <p class="text-gray-700" id="modal-q3">포트폴리오 준비는 빠를수록 좋아요. 그리고 전문가의 도움을 받는 것을 주저하지 마세요!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button onclick="requestTalk()" class="flex-1 gradient-bg text-white py-4 rounded-xl font-bold hover:shadow-2xl transition">
+                        <i class="fas fa-comments mr-2"></i>1:1 대화 신청
+                    </button>
+                    <button onclick="shareStory()" class="px-6 py-4 border-2 border-purple-600 text-purple-600 rounded-xl font-bold hover:bg-purple-50 transition">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const stories = {
+            1: {
+                name: '김서연',
+                school: 'Parsons School of Design · 패션 디자인',
+                story: '처음에는 미국 유학이 막연하고 두려웠어요. 학비도 걱정이었고, 포트폴리오도 어디서부터 시작해야 할지 몰랐죠. Edit을 만나고 모든 것이 달라졌습니다. AI 기반 포트폴리오 분석으로 제 약점을 객관적으로 파악할 수 있었고, 현역 파슨스 졸업생 멘토님의 1:1 피드백은 정말 값진 경험이었어요. 온라인으로 6개월간 준비한 후 뉴욕으로 건너가 파슨스 캠퍼스 투어와 면접을 봤고, 결국 합격할 수 있었습니다!',
+                q1: 'AI 기반 포트폴리오 분석과 현역 작가님들의 멘토링이 큰 도움이 되었습니다. 특히 비용을 절감하면서도 최고 수준의 교육을 받을 수 있다는 점이 좋았어요.',
+                q2: '파슨스 합격 통보를 받았을 때 가장 먼저 Edit 컨설턴트님께 연락했어요. 함께 기뻐해주시고 축하해주셔서 정말 감동적이었습니다.',
+                q3: '포트폴리오 준비는 빠를수록 좋아요. 그리고 전문가의 도움을 받는 것을 주저하지 마세요. 혼자서는 절대 보지 못했을 관점을 얻을 수 있습니다!'
+            },
+            2: {
+                name: '이준호',
+                school: 'Royal College of Art · 그래픽 디자인',
+                story: 'RCA는 제게 꿈의 학교였어요. 하지만 합격률이 너무 낮아서 거의 포기하고 있었죠. Edit의 AI 포트폴리오 분석을 받고 충격을 받았어요. 제가 생각하는 강점과 실제 입학 심사위원이 보는 강점이 완전히 달랐거든요. 8주간의 집중 과정을 통해 포트폴리오를 완전히 재구성했고, 결과는 놀라웠습니다. RCA뿐만 아니라 CSM에서도 합격 통지를 받았어요!',
+                q1: 'AI 분석이 정말 객관적이고 데이터 기반이라는 점이 신뢰가 갔어요. 수천 개의 합격 포트폴리오를 학습한 AI가 제 작품을 분석해준다는 게 획기적이었습니다.',
+                q2: 'RCA 합격 이메일을 받았을 때죠. 믿을 수 없어서 세 번이나 다시 읽었어요. 그리고 바로 멘토님께 영상통화를 걸어 함께 기뻐했습니다.',
+                q3: '절대 포기하지 마세요. 저도 처음에는 불가능해 보였지만, 올바른 방향과 전문가의 도움이 있다면 충분히 가능합니다!'
+            },
+            3: {
+                name: '박지민',
+                school: 'Rhode Island School of Design · 순수미술',
+                story: 'RISD는 제가 10년간 꿈꿔온 학교였어요. 하지만 순수미술 전공은 경쟁이 정말 치열하죠. Edit의 현역 작가 멘토님과의 1:1 세션이 제 인생을 바꿔놨어요. 단순히 기술을 가르쳐주신 게 아니라, 예술적 사고방식과 자신만의 목소리를 찾는 방법을 알려주셨어요. 12주 과정 동안 20점의 작품을 완성했고, 그 중 18점을 포트폴리오에 담았습니다. 결과는... RISD 합격!',
+                q1: '현역 작가님과의 1:1 멘토링이 결정적이었어요. 작품에 대한 깊이 있는 대화와 크리틱이 제 작품 세계를 완전히 바꿔놨습니다.',
+                q2: 'RISD 캠퍼스를 처음 방문했을 때요. "내가 정말 이곳의 학생이 되는구나" 실감이 났습니다. 꿈만 같았어요.',
+                q3: '자신의 예술적 정체성을 찾는 것이 가장 중요해요. 기술은 배울 수 있지만, 자신만의 목소리는 탐구와 고민을 통해 발견해야 합니다.'
+            },
+            4: {
+                name: '최민수',
+                school: 'Central Saint Martins · 제품 디자인',
+                story: 'CSM은 세계에서 가장 혁신적인 디자인 스쿨이에요. 제가 여기 합격할 수 있었던 건 Edit의 체계적인 프로그램 덕분입니다. 특히 디자인 씽킹 워크샵에서 배운 문제 해결 방식이 포트폴리오에 그대로 반영되었어요. 매주 새로운 프로젝트를 진행하면서 제 디자인 철학을 정립할 수 있었습니다.',
+                q1: '체계적이면서도 창의적인 커리큘럼이 좋았어요. 단순히 포트폴리오만 만드는 게 아니라, 디자이너로서의 사고방식을 배울 수 있었습니다.',
+                q2: 'CSM 면접 때 제 프로젝트를 발표하면서 심사위원분들이 정말 흥미롭게 들어주셨을 때요. 그때 "내가 올바른 방향으로 준비했구나" 확신했습니다.',
+                q3: '자신만의 디자인 철학을 가지세요. 트렌드를 따라가는 것보다 자신만의 관점을 개발하는 것이 훨씬 중요합니다.'
+            },
+            5: {
+                name: '정수아',
+                school: 'Fashion Institute of Technology · 패션 마케팅',
+                story: 'FIT는 패션 산업의 심장부인 뉴욕에서 가장 실무적인 교육을 받을 수 있는 곳이에요. Edit의 도움으로 포트폴리오뿐만 아니라 인터뷰 준비까지 완벽하게 할 수 있었어요. 특히 AI 챗봇으로 무한 연습한 모의 면접이 실제 인터뷰에서 큰 도움이 되었습니다.',
+                q1: '실무 중심의 커리큘럼과 현업 전문가 멘토링이 FIT 입학에 큰 도움이 되었어요.',
+                q2: '뉴욕 패션 위크를 FIT 학생으로서 처음 참여했을 때요. 꿈이 현실이 되는 순간이었습니다.',
+                q3: '패션은 창의성과 비즈니스의 조화예요. 두 가지 모두 균형있게 발전시키세요!'
+            },
+            6: {
+                name: '강민재',
+                school: 'Yale School of Art · 회화',
+                story: 'Yale는 입학하기 가장 어려운 미술대학 중 하나죠. 합격률 3%라는 통계를 보고 거의 포기했었어요. 하지만 Edit의 전폭적인 지원 덕분에 불가능을 가능으로 만들었습니다. 포트폴리오 마스터클래스에서 배운 내러티브 구성 방식이 결정적이었어요.',
+                q1: '최고 수준의 멘토링과 데이터 기반 전략이 조합되어 있다는 점이 좋았어요. 감에 의존하지 않고 철저히 준비할 수 있었습니다.',
+                q2: 'Yale 합격 통지를 받았을 때요. 손이 떨려서 이메일을 제대로 읽을 수가 없었어요. 가족들과 함께 울면서 기뻐했습니다.',
+                q3: '포기하지 말고 끝까지 최선을 다하세요. 통계는 그저 숫자일 뿐이에요. 여러분의 열정과 노력이 진짜 중요합니다!'
+            }
+        };
+        
+        function filterStories(category) {
+            const cards = document.querySelectorAll('.story-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-purple-600', 'text-white');
+                btn.classList.add('border');
+            });
+            
+            event.target.classList.add('active', 'bg-purple-600', 'text-white');
+            event.target.classList.remove('border');
+            
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category.includes(category)) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+        
+        function openStoryModal(id) {
+            const story = stories[id];
+            document.getElementById('modal-name').textContent = story.name;
+            document.getElementById('modal-school').textContent = story.school;
+            document.getElementById('modal-story').textContent = story.story;
+            document.getElementById('modal-q1').textContent = story.q1;
+            document.getElementById('modal-q2').textContent = story.q2;
+            document.getElementById('modal-q3').textContent = story.q3;
+            
+            document.getElementById('storyModal').classList.remove('hidden');
+            document.getElementById('storyModal').classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeStoryModal() {
+            document.getElementById('storyModal').classList.add('hidden');
+            document.getElementById('storyModal').classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+        
+        function requestTalk() {
+            alert('졸업생과의 1:1 대화 신청이 접수되었습니다!\n담당자가 곧 연락드리겠습니다.');
+            closeStoryModal();
+        }
+        
+        function shareStory() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Edit 졸업생 스토리',
+                    text: '이 감동적인 스토리를 확인해보세요!',
+                    url: window.location.href
+                });
+            } else {
+                alert('링크가 클립보드에 복사되었습니다!');
+            }
+        }
+    </script>
+</body>
+</html>

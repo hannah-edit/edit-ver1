@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Admin - 관리자 대시보드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .sidebar-link {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+        }
+        
+        .sidebar-link.active {
+            background: rgba(102, 126, 234, 0.15);
+            border-left: 4px solid #667eea;
+            font-weight: 600;
+        }
+        
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .modal {
+            display: none;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- 사이드바 -->
+        <aside class="w-64 bg-white shadow-lg">
+            <div class="p-6 gradient-bg">
+                <h1 class="text-2xl font-bold text-white">Edit Admin</h1>
+                <p class="text-purple-100 text-sm">관리자 대시보드</p>
+            </div>
+            
+            <nav class="mt-6">
+                <a href="#dashboard" class="sidebar-link active flex items-center px-6 py-3 text-gray-700" onclick="showSection('dashboard')">
+                    <i class="fas fa-chart-line w-6"></i>
+                    <span>대시보드</span>
+                </a>
+                <a href="#artists" class="sidebar-link flex items-center px-6 py-3 text-gray-700" onclick="showSection('artists')">
+                    <i class="fas fa-users w-6"></i>
+                    <span>아티스트 관리</span>
+                </a>
+                <a href="#programs" class="sidebar-link flex items-center px-6 py-3 text-gray-700" onclick="showSection('programs')">
+                    <i class="fas fa-book w-6"></i>
+                    <span>프로그램 관리</span>
+                </a>
+                <a href="#zoom-sessions" class="sidebar-link flex items-center px-6 py-3 text-gray-700" onclick="showSection('zoom-sessions')">
+                    <i class="fas fa-video w-6"></i>
+                    <span>Zoom 세션 관리</span>
+                </a>
+                <a href="#students" class="sidebar-link flex items-center px-6 py-3 text-gray-700" onclick="showSection('students')">
+                    <i class="fas fa-user-graduate w-6"></i>
+                    <span>학생 관리</span>
+                </a>
+                <a href="#content" class="sidebar-link flex items-center px-6 py-3 text-gray-700" onclick="showSection('content')">
+                    <i class="fas fa-folder w-6"></i>
+                    <span>컨텐츠 관리</span>
+                </a>
+                <a href="#analytics" class="sidebar-link flex items-center px-6 py-3 text-gray-700" onclick="showSection('analytics')">
+                    <i class="fas fa-chart-bar w-6"></i>
+                    <span>분석 및 리포트</span>
+                </a>
+                <a href="#settings" class="sidebar-link flex items-center px-6 py-3 text-gray-700" onclick="showSection('settings')">
+                    <i class="fas fa-cog w-6"></i>
+                    <span>설정</span>
+                </a>
+            </nav>
+
+            <div class="absolute bottom-0 w-64 p-6 border-t">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 bg-purple-200 rounded-full mr-3"></div>
+                    <div>
+                        <p class="font-semibold text-sm">관리자</p>
+                        <p class="text-xs text-gray-500">admin@edit.com</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- 헤더 -->
+            <header class="bg-white shadow-sm">
+                <div class="flex justify-between items-center px-8 py-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800" id="page-title">대시보드</h2>
+                        <p class="text-gray-600 text-sm" id="page-subtitle">전체 현황을 한눈에 확인하세요</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="relative">
+                            <i class="fas fa-bell text-gray-600 text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">3</span>
+                        </button>
+                        <button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition">
+                            <i class="fas fa-plus mr-2"></i>새로 추가
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 대시보드 섹션 -->
+            <section id="dashboard-section" class="p-8">
+                <!-- 통계 카드 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="stat-card bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl p-6 text-white">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-purple-100 text-sm">총 학생 수</p>
+                                <h3 class="text-4xl font-bold mt-2">5,247</h3>
+                                <p class="text-purple-100 text-sm mt-2">
+                                    <i class="fas fa-arrow-up mr-1"></i>12% 증가
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-user-graduate text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl p-6 text-white">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-pink-100 text-sm">활성 아티스트</p>
+                                <h3 class="text-4xl font-bold mt-2">523</h3>
+                                <p class="text-pink-100 text-sm mt-2">
+                                    <i class="fas fa-arrow-up mr-1"></i>8% 증가
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-palette text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card bg-gradient-to-br from-blue-500 to-cyan-600 rounded-2xl p-6 text-white">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-blue-100 text-sm">이번 달 세션</p>
+                                <h3 class="text-4xl font-bold mt-2">1,832</h3>
+                                <p class="text-blue-100 text-sm mt-2">
+                                    <i class="fas fa-arrow-up mr-1"></i>24% 증가
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-video text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl p-6 text-white">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-green-100 text-sm">이번 달 수익</p>
+                                <h3 class="text-4xl font-bold mt-2">₩84M</h3>
+                                <p class="text-green-100 text-sm mt-2">
+                                    <i class="fas fa-arrow-up mr-1"></i>18% 증가
+                                </p>
+                            </div>
+                            <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-won-sign text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 최근 활동 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-xl font-bold mb-4">최근 등록 학생</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-purple-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <p class="font-semibold">김민지</p>
+                                        <p class="text-sm text-gray-500">파슨스 지원</p>
+                                    </div>
+                                </div>
+                                <span class="text-sm text-gray-500">2시간 전</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-pink-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <p class="font-semibold">이준호</p>
+                                        <p class="text-sm text-gray-500">RCA 지원</p>
+                                    </div>
+                                </div>
+                                <span class="text-sm text-gray-500">5시간 전</span>
+                            </div>
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 bg-blue-200 rounded-full mr-3"></div>
+                                    <div>
+                                        <p class="font-semibold">박서윤</p>
+                                        <p class="text-sm text-gray-500">RISD 지원</p>
+                                    </div>
+                                </div>
+                                <span class="text-sm text-gray-500">1일 전</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-xl font-bold mb-4">예정된 Zoom 세션</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-purple-50 rounded-xl border-l-4 border-purple-500">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold">포트폴리오 리뷰</h4>
+                                    <span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">진행중</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">강사: 김아트 작가</p>
+                                <p class="text-sm text-gray-500">
+                                    <i class="far fa-clock mr-1"></i>오늘 14:00 - 16:00
+                                </p>
+                            </div>
+                            <div class="p-4 bg-blue-50 rounded-xl border-l-4 border-blue-500">
+                                <div class="flex justify-between items-start mb-2">
+                                    <h4 class="font-semibold">디자인 씽킹 워크샵</h4>
+                                    <span class="bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">예정</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-2">강사: 이디자인 교수</p>
+                                <p class="text-sm text-gray-500">
+                                    <i class="far fa-clock mr-1"></i>내일 10:00 - 12:00
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 아티스트 관리 섹션 -->
+            <section id="artists-section" class="p-8 hidden">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold">아티스트 관리</h3>
+                        <button onclick="openArtistModal()" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                            <i class="fas fa-plus mr-2"></i>새 아티스트 추가
+                        </button>
+                    </div>
+
+                    <!-- 검색 및 필터 -->
+                    <div class="flex gap-4 mb-6">
+                        <input type="text" placeholder="아티스트 검색..." class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>전체 분야</option>
+                            <option>회화</option>
+                            <option>조각</option>
+                            <option>디자인</option>
+                            <option>사진</option>
+                        </select>
+                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>전체 상태</option>
+                            <option>활성</option>
+                            <option>비활성</option>
+                        </select>
+                    </div>
+
+                    <!-- 아티스트 테이블 -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">아티스트</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">전문 분야</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">학생 수</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">평점</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">상태</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">작업</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 bg-purple-200 rounded-full mr-3"></div>
+                                            <div>
+                                                <p class="font-semibold">김아트</p>
+                                                <p class="text-sm text-gray-500">kim@art.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">현대미술, 회화</td>
+                                    <td class="px-6 py-4">42명</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <span class="ml-1">4.9</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">활성</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="w-10 h-10 bg-pink-200 rounded-full mr-3"></div>
+                                            <div>
+                                                <p class="font-semibold">이디자인</p>
+                                                <p class="text-sm text-gray-500">lee@design.com</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">산업디자인, UX</td>
+                                    <td class="px-6 py-4">38명</td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <i class="fas fa-star text-yellow-400"></i>
+                                            <span class="ml-1">4.8</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">활성</span>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <button class="text-blue-600 hover:text-blue-800 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-800"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Zoom 세션 관리 섹션 -->
+            <section id="zoom-sessions-section" class="p-8 hidden">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold">Zoom 세션 관리</h3>
+                        <button onclick="openZoomModal()" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                            <i class="fas fa-plus mr-2"></i>새 세션 생성
+                        </button>
+                    </div>
+
+                    <!-- 탭 메뉴 -->
+                    <div class="flex border-b mb-6">
+                        <button class="px-6 py-3 border-b-2 border-purple-600 text-purple-600 font-semibold">예정된 세션</button>
+                        <button class="px-6 py-3 text-gray-600 hover:text-purple-600">진행 중</button>
+                        <button class="px-6 py-3 text-gray-600 hover:text-purple-600">완료된 세션</button>
+                    </div>
+
+                    <!-- 세션 리스트 -->
+                    <div class="space-y-4">
+                        <div class="border rounded-xl p-6 hover:shadow-md transition">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">포트폴리오 마스터클래스</h4>
+                                    <p class="text-gray-600">강사: 김아트 작가</p>
+                                </div>
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">예정</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div>
+                                    <p class="text-sm text-gray-500">날짜/시간</p>
+                                    <p class="font-semibold">2026-02-15 14:00</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">예상 참석자</p>
+                                    <p class="font-semibold">25명</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">소요 시간</p>
+                                    <p class="font-semibold">2시간</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="flex-1 bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition">
+                                    <i class="fas fa-link mr-2"></i>Zoom 링크 복사
+                                </button>
+                                <button class="px-4 py-2 border rounded-lg hover:bg-gray-50 transition">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="border rounded-xl p-6 hover:shadow-md transition">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h4 class="text-xl font-bold mb-2">디자인 씽킹 워크샵</h4>
+                                    <p class="text-gray-600">강사: 이디자인 교수</p>
+                                </div>
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">진행중</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 mb-4">
+                                <div>
+                                    <p class="text-sm text-gray-500">날짜/시간</p>
+                                    <p class="font-semibold">2026-02-10 10:00</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">현재 참석자</p>
+                                    <p class="font-semibold">18명</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-gray-500">소요 시간</p>
+                                    <p class="font-semibold">3시간</p>
+                                </div>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">
+                                    <i class="fas fa-video mr-2"></i>세션 참여하기
+                                </button>
+                                <button class="px-4 py-2 border rounded-lg hover:bg-gray-50 transition">
+                                    <i class="fas fa-chart-bar"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 프로그램 관리 섹션 -->
+            <section id="programs-section" class="p-8 hidden">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold">프로그램 관리</h3>
+                        <button onclick="openProgramModal()" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition">
+                            <i class="fas fa-plus mr-2"></i>새 프로그램 추가
+                        </button>
+                    </div>
+
+                    <!-- 검색 및 필터 -->
+                    <div class="flex gap-4 mb-6">
+                        <input type="text" placeholder="프로그램 검색..." class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>전체 카테고리</option>
+                            <option>포트폴리오</option>
+                            <option>파인아트</option>
+                            <option>디자인</option>
+                        </select>
+                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>전체 상태</option>
+                            <option>모집중</option>
+                            <option>진행중</option>
+                            <option>마감</option>
+                        </select>
+                    </div>
+
+                    <!-- 프로그램 테이블 -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">프로그램</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">강사</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">기간</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">수강생</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">가격</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">상태</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">작업</th>
+                                </tr>
+                            </thead>
+                            <tbody id="programs-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- 동적으로 로드됨 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="students-section" class="p-8 hidden">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold">학생 관리</h3>
+                        <div class="flex space-x-3">
+                            <button onclick="exportStudents()" class="border border-purple-600 text-purple-600 px-4 py-2 rounded-lg hover:bg-purple-50 transition">
+                                <i class="fas fa-download mr-2"></i>엑셀 다운로드
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 검색 -->
+                    <div class="flex gap-4 mb-6">
+                        <input type="text" placeholder="학생 이름 또는 이메일 검색..." class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option>전체 상태</option>
+                            <option>활성</option>
+                            <option>비활성</option>
+                        </select>
+                    </div>
+
+                    <!-- 학생 테이블 -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">학생 정보</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">목표 학교</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">전공</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">진행률</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">상담 횟수</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">가입일</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">작업</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- 동적으로 로드됨 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="content-section" class="p-8 hidden">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-2xl font-bold mb-6">컨텐츠 관리</h3>
+                    <p class="text-gray-600">컨텐츠 관리 기능이 여기에 표시됩니다.</p>
+                </div>
+            </section>
+
+            <section id="analytics-section" class="p-8 hidden">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-2xl font-bold mb-6">분석 및 리포트</h3>
+                    <p class="text-gray-600">분석 및 리포트 기능이 여기에 표시됩니다.</p>
+                </div>
+            </section>
+
+            <section id="settings-section" class="p-8 hidden">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <h3 class="text-2xl font-bold mb-6">설정</h3>
+                    <p class="text-gray-600">설정 기능이 여기에 표시됩니다.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 아티스트 추가 모달 -->
+    <div id="artistModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">새 아티스트 추가</h3>
+                <button onclick="closeArtistModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">이름</label>
+                        <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="아티스트 이름">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">이메일</label>
+                        <input type="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="이메일 주소">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">전문 분야</label>
+                    <select class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option>선택하세요</option>
+                        <option>회화</option>
+                        <option>조각</option>
+                        <option>디자인</option>
+                        <option>사진</option>
+                        <option>영상</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">경력</label>
+                    <textarea rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="아티스트의 경력과 약력을 입력하세요"></textarea>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">프로필 이미지</label>
+                    <input type="file" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                
+                <div class="flex space-x-4 pt-4">
+                    <button type="button" onclick="closeArtistModal()" class="flex-1 px-6 py-3 border rounded-lg hover:bg-gray-50 transition">
+                        취소
+                    </button>
+                    <button type="submit" class="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        추가하기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 프로그램 추가/수정 모달 -->
+    <div id="programModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold" id="program-modal-title">새 프로그램 추가</h3>
+                <button onclick="closeProgramModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="programForm" class="space-y-4">
+                <input type="hidden" id="program-id">
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">프로그램 제목 *</label>
+                    <input type="text" id="program-title" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="예: 포트폴리오 마스터클래스">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">프로그램 설명 *</label>
+                    <textarea id="program-description" required rows="3" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="프로그램에 대한 간단한 설명"></textarea>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">강사 선택 *</label>
+                        <select id="program-instructor" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <option value="">선택하세요</option>
+                            <option value="김아트">김아트</option>
+                            <option value="이디자인">이디자인</option>
+                            <option value="박조각">박조각</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">기간</label>
+                        <input type="text" id="program-duration" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="예: 8주">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">수강료 (원) *</label>
+                        <input type="number" id="program-price" required class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="500000">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">최대 수강생</label>
+                        <input type="number" id="program-max-students" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="30">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">시작일</label>
+                        <input type="date" id="program-start-date" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">일정</label>
+                        <input type="text" id="program-schedule" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="예: 매주 토요일 14:00-16:00">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">카테고리</label>
+                    <select id="program-category" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="portfolio">포트폴리오</option>
+                        <option value="fine-art">파인아트</option>
+                        <option value="design">디자인</option>
+                        <option value="fashion">패션</option>
+                        <option value="media">미디어</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">레벨</label>
+                    <select id="program-level" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="beginner">초급</option>
+                        <option value="intermediate">중급</option>
+                        <option value="advanced">고급</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">상태</label>
+                    <select id="program-status" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="open">모집중</option>
+                        <option value="ongoing">진행중</option>
+                        <option value="closed">마감</option>
+                    </select>
+                </div>
+                
+                <div class="flex space-x-4 pt-4">
+                    <button type="button" onclick="closeProgramModal()" class="flex-1 px-6 py-3 border rounded-lg hover:bg-gray-50 transition">
+                        취소
+                    </button>
+                    <button type="submit" class="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        저장하기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Zoom 세션 생성 모달 -->
+    <div id="zoomModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">새 Zoom 세션 생성</h3>
+                <button onclick="closeZoomModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">세션 제목</label>
+                    <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="세션 제목 입력">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">강사 선택</label>
+                    <select class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option>선택하세요</option>
+                        <option>김아트 작가</option>
+                        <option>이디자인 교수</option>
+                        <option>박조각 작가</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">날짜</label>
+                        <input type="date" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">시간</label>
+                        <input type="time" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">소요 시간 (시간)</label>
+                    <input type="number" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="2">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">최대 참석자</label>
+                    <input type="number" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="30">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">설명</label>
+                    <textarea rows="4" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="세션에 대한 상세 설명을 입력하세요"></textarea>
+                </div>
+                
+                <div class="flex space-x-4 pt-4">
+                    <button type="button" onclick="closeZoomModal()" class="flex-1 px-6 py-3 border rounded-lg hover:bg-gray-50 transition">
+                        취소
+                    </button>
+                    <button type="submit" class="flex-1 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        생성하기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="api-mock.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
