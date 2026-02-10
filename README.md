@@ -6,6 +6,8 @@
 
 Edit은 AI 기반 맞춤형 컨설팅과 글로벌 아티스트 네트워크를 통해 미술 유학의 꿈을 현실로 만드는 혁신적인 플랫폼입니다.
 
+🌐 **Live Demo**: https://hannah-edit.github.io/edit-ver1/
+
 ### 주요 기능
 
 #### 메인 랜딩페이지
